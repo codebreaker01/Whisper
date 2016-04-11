@@ -36,7 +36,7 @@ class WhisperFactory: NSObject {
 
   override init() {
     super.init()
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationDidChange", name: UIDeviceOrientationDidChangeNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WhisperFactory.orientationDidChange), name: UIDeviceOrientationDidChangeNotification, object: nil)
   }
 
   deinit {
@@ -107,7 +107,7 @@ class WhisperFactory: NSObject {
     delayTimer.invalidate()
     if after > 0.0 {
       delayTimer = NSTimer.scheduledTimerWithTimeInterval(after, target: self,
-        selector: "delayFired:", userInfo: nil, repeats: false)
+        selector: #selector(WhisperFactory.delayFired(_:)), userInfo: nil, repeats: false)
     } else {
       // Directly hide the view if no delay was requested so that it happens in current runloop. Causes state based issues otherwise when hide and display are called successively.
       hideView()
@@ -150,7 +150,7 @@ class WhisperFactory: NSObject {
       }
       }, completion: { _ in
         self.delayTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self,
-          selector: "delayFired:", userInfo: nil, repeats: false)
+          selector: #selector(WhisperFactory.delayFired(_:)), userInfo: nil, repeats: false)
     })
   }
 
@@ -168,7 +168,7 @@ class WhisperFactory: NSObject {
     if let images = message.images { array["images"] = images }
 
     presentTimer = NSTimer.scheduledTimerWithTimeInterval(AnimationTiming.movement * 1.1, target: self,
-      selector: "presentFired:", userInfo: array, repeats: false)
+      selector: #selector(WhisperFactory.presentFired(_:)), userInfo: array, repeats: false)
   }
 
   func hideView() {

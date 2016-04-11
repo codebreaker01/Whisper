@@ -36,7 +36,7 @@ public class WhistleFactory: UIViewController {
     view.clipsToBounds = true
     view.addSubview(titleLabel)
 
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationDidChange", name: UIDeviceOrientationDidChangeNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WhistleFactory.orientationDidChange), name: UIDeviceOrientationDidChangeNotification, object: nil)
   }
 
   public required init?(coder aDecoder: NSCoder) {
@@ -63,7 +63,7 @@ public class WhistleFactory: UIViewController {
   
   func silentWhistle(after: NSTimeInterval) {
     hideTimer.invalidate()
-    hideTimer = NSTimer.scheduledTimerWithTimeInterval(after, target: self, selector: "timerDidFire", userInfo: nil, repeats: false)
+    hideTimer = NSTimer.scheduledTimerWithTimeInterval(after, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
   }
 
   // MARK: - Setup
@@ -121,7 +121,7 @@ public class WhistleFactory: UIViewController {
     })
 
     if duration > 0.0 {
-        hideTimer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: "timerDidFire", userInfo: nil, repeats: false)
+        hideTimer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
     }
   }
 
