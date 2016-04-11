@@ -18,7 +18,7 @@ public func Silent(controller: UINavigationController, after: NSTimeInterval = 0
 class WhisperFactory: NSObject {
 
   struct AnimationTiming {
-    static let movement: NSTimeInterval = 0.3
+    static let movement: NSTimeInterval = 0.0
     static let switcher: NSTimeInterval = 0.1
     static let popUp: NSTimeInterval = 1.5
     static let loaderDuration: NSTimeInterval = 0.7
