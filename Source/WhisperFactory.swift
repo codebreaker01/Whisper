@@ -15,7 +15,7 @@ public func Silent(controller: UINavigationController, after: NSTimeInterval = 0
   whisperFactory.silentWhisper(controller, after: after)
 }
 
-public var isDisplayed: Bool {
+public var isWhisperDisplayed: Bool {
   return whisperFactory.isDisplayed
 }
 
