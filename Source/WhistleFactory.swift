@@ -14,7 +14,7 @@ public class WhistleFactory: UIViewController {
 
   public lazy var whistleWindow: UIWindow = UIWindow()
     
-    public lazy var titleLabelHeight = CGFloat(20.0)
+  public lazy var titleLabelHeight = CGFloat(20.0)
 
   public lazy var titleLabel: UILabel = {
     let label = UILabel()
