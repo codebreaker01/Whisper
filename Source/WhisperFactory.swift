@@ -15,6 +15,10 @@ public func Silent(controller: UINavigationController, after: NSTimeInterval = 0
   whisperFactory.silentWhisper(controller, after: after)
 }
 
+public var isDisplayed: Bool {
+  return whisperFactory.isDisplayed
+}
+
 class WhisperFactory: NSObject {
 
   struct AnimationTiming {
@@ -31,7 +35,8 @@ class WhisperFactory: NSObject {
   var delayTimer = NSTimer()
   var presentTimer = NSTimer()
   var navigationStackCount = 0
-
+  private var isDisplayed: Bool = false
+    
   // MARK: - Initializers
 
   override init() {
@@ -130,6 +135,7 @@ class WhisperFactory: NSObject {
         }
 
         subview.alpha = 1
+        self.isDisplayed = true
       }
     })
   }
@@ -147,6 +153,7 @@ class WhisperFactory: NSObject {
         }
 
         subview.alpha = 1
+        self.isDisplayed = true
       }
       }, completion: { _ in
         self.delayTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self,
@@ -182,6 +189,7 @@ class WhisperFactory: NSObject {
       }
       }, completion: { _ in
         self.whisperView.removeFromSuperview()
+        self.isDisplayed = false
     })
   }
 
