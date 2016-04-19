@@ -181,16 +181,15 @@ class WhisperFactory: NSObject {
   func hideView() {
     moveControllerViews(false)
 
-    UIView.animateWithDuration(AnimationTiming.movement, animations: {
-      self.whisperView.frame.size.height = 0
-      for subview in self.whisperView.transformViews {
-        subview.frame.origin.y = -10
-        subview.alpha = 0
-      }
-      }, completion: { _ in
+    UIView.performWithoutAnimation {
+        self.whisperView.frame.size.height = 0
+        for subview in self.whisperView.transformViews {
+            subview.frame.origin.y = -10
+            subview.alpha = 0
+        }
         self.whisperView.removeFromSuperview()
         self.isDisplayed = false
-    })
+    }
   }
 
   // MARK: - Timer methods
