@@ -3,11 +3,15 @@ import UIKit
 let whistleFactory = WhistleFactory()
 
 public func Whistle(murmur: Murmur) {
-  whistleFactory.whistler(murmur)
+  if UIApplication.sharedApplication().applicationState == .Active {
+    whistleFactory.whistler(murmur)
+  }
 }
 
 public func Silent(after: NSTimeInterval = 0) {
-  whistleFactory.silentWhistle(after)
+  if UIApplication.sharedApplication().applicationState == .Active {
+    whistleFactory.silentWhistle(after)
+  }
 }
 
 public class WhistleFactory: UIViewController {
@@ -70,6 +74,7 @@ public class WhistleFactory: UIViewController {
 
   public func setupWindow() {
     whistleWindow.addSubview(self.view)
+    whistleWindow.rootViewController = UIViewController()
     whistleWindow.clipsToBounds = true
     moveWindowToFront()
   }
