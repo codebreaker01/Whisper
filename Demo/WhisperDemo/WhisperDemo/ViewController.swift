@@ -10,9 +10,9 @@ class ViewController: UIViewController {
     label.text = "Welcome to the magic of a tiny Whisper... 🍃"
     label.font = UIFont(name: "HelveticaNeue-Medium", size: 20)!
     label.textColor = UIColor(red:0.86, green:0.86, blue:0.86, alpha:1)
-    label.textAlignment = .Center
+    label.textAlignment = .center
     label.numberOfLines = 0
-    label.frame.size.width = UIScreen.mainScreen().bounds.width - 60
+    label.frame.size.width = UIScreen.main.bounds.width - 60
     label.sizeToFit()
 
     return label
@@ -20,47 +20,47 @@ class ViewController: UIViewController {
 
   lazy var presentButton: UIButton = { [unowned self] in
     let button = UIButton()
-    button.addTarget(self, action: #selector(presentButtonDidPress(_:)), forControlEvents: .TouchUpInside)
-    button.setTitle("Present and silent", forState: .Normal)
+    button.addTarget(self, action: #selector(presentButtonDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Present and silent", for: UIControlState())
 
     return button
     }()
 
   lazy var showButton: UIButton = { [unowned self] in
     let button = UIButton()
-    button.addTarget(self, action: #selector(showButtonDidPress(_:)), forControlEvents: .TouchUpInside)
-    button.setTitle("Show", forState: .Normal)
+    button.addTarget(self, action: #selector(showButtonDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Show", for: UIControlState())
 
     return button
     }()
 
   lazy var presentPermanentButton: UIButton = { [unowned self] in
     let button = UIButton()
-    button.addTarget(self, action: #selector(presentPermanentButtonDidPress(_:)), forControlEvents: .TouchUpInside)
-    button.setTitle("Present permanent Whisper", forState: .Normal)
+    button.addTarget(self, action: #selector(presentPermanentButtonDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Present permanent Whisper", for: UIControlState())
 
     return button
     }()
 
   lazy var notificationButton: UIButton = { [unowned self] in
     let button = UIButton()
-    button.addTarget(self, action: #selector(presentNotificationDidPress(_:)), forControlEvents: .TouchUpInside)
-    button.setTitle("Notification", forState: .Normal)
+    button.addTarget(self, action: #selector(presentNotificationDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Notification", for: UIControlState())
 
     return button
     }()
 
   lazy var statusBarButton: UIButton = { [unowned self] in
     let button = UIButton()
-    button.addTarget(self, action: #selector(statusBarButtonDidPress(_:)), forControlEvents: .TouchUpInside)
-    button.setTitle("Status bar", forState: .Normal)
+    button.addTarget(self, action: #selector(statusBarButtonDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Status bar", for: UIControlState())
 
     return button
     }()
 
   lazy var containerView: UIView = {
     let view = UIView()
-    view.backgroundColor = UIColor.grayColor()
+    view.backgroundColor = UIColor.gray
 
     return view
     }()
@@ -68,7 +68,7 @@ class ViewController: UIViewController {
   lazy var nextButton: UIBarButtonItem = { [unowned self] in
     let button = UIBarButtonItem()
     button.title = "Next"
-    button.style = .Plain
+    button.style = .plain
     button.target = self
     button.action = #selector(nextButtonDidPress)
 
@@ -78,8 +78,8 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = UIColor.whiteColor()
-    title = "Whisper".uppercaseString
+    view.backgroundColor = UIColor.white
+    title = "Whisper".uppercased()
     navigationItem.rightBarButtonItem = nextButton
 
     view.addSubview(scrollView)
@@ -87,8 +87,8 @@ class ViewController: UIViewController {
       presentPermanentButton, notificationButton, statusBarButton].forEach { scrollView.addSubview($0) }
 
     [presentButton, showButton, presentPermanentButton, notificationButton, statusBarButton].forEach {
-      $0.setTitleColor(UIColor.grayColor(), forState: .Normal)
-      $0.layer.borderColor = UIColor.grayColor().CGColor
+      $0.setTitleColor(UIColor.gray, for: UIControlState())
+      $0.layer.borderColor = UIColor.gray.cgColor
       $0.layer.borderWidth = 1.5
       $0.layer.cornerRadius = 7.5
     }
@@ -97,24 +97,24 @@ class ViewController: UIViewController {
 
     navigationController.navigationBar.addSubview(containerView)
     containerView.frame = CGRect(x: 0,
-      y: navigationController.navigationBar.frame.maxY - UIApplication.sharedApplication().statusBarFrame.height,
-      width: UIScreen.mainScreen().bounds.width, height: 0)
+      y: navigationController.navigationBar.frame.maxY - UIApplication.shared.statusBarFrame.height,
+      width: UIScreen.main.bounds.width, height: 0)
   }
 
-  override func viewDidAppear(animated: Bool) {
+  override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     setupFrames()
   }
 
   // MARK: - Orientation changes
 
-  override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+  override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
     setupFrames()
   }
 
   // MARK: Action methods
 
-  func presentButtonDidPress(button: UIButton) {
+  func presentButtonDidPress(_ button: UIButton) {
     guard let navigationController = navigationController else { return }
     let message = Message(title: "This message will silent in 3 seconds.", backgroundColor: UIColor(red:0.89, green:0.09, blue:0.44, alpha:1))
 
@@ -122,14 +122,14 @@ class ViewController: UIViewController {
     Silent(navigationController, after: 3)
   }
 
-  func showButtonDidPress(button: UIButton) {
+  func showButtonDidPress(_ button: UIButton) {
     guard let navigationController = navigationController else { return }
 
-    let message = Message(title: "Showing all the things.", backgroundColor: UIColor.blackColor())
+    let message = Message(title: "Showing all the things.", backgroundColor: UIColor.black)
     Whisper(message, to: navigationController)
   }
 
-  func presentPermanentButtonDidPress(button: UIButton) {
+  func presentPermanentButtonDidPress(_ button: UIButton) {
     guard let navigationController = navigationController else { return }
 
     let message = Message(title: "This is a permanent Whisper.", textColor: UIColor(red:0.87, green:0.34, blue:0.05, alpha:1),
@@ -137,7 +137,7 @@ class ViewController: UIViewController {
     Whisper(message, to: navigationController, action: .Present)
   }
 
-  func presentNotificationDidPress(button: UIButton) {
+  func presentNotificationDidPress(_ button: UIButton) {
     let announcement = Announcement(title: "Ramon Gilabert", subtitle: "Vadym Markov just commented your post", image: UIImage(named: "avatar"))
 
     Shout(announcement, to: self, completion: {
@@ -150,7 +150,7 @@ class ViewController: UIViewController {
     navigationController?.pushViewController(controller, animated: true)
   }
 
-  func statusBarButtonDidPress(button: UIButton) {
+  func statusBarButtonDidPress(_ button: UIButton) {
     let murmur = Murmur(title: "This is a small whistle...",
       backgroundColor: UIColor(red: 0.975, green: 0.975, blue: 0.975, alpha: 1))
 
@@ -160,7 +160,7 @@ class ViewController: UIViewController {
   // MARK - Configuration
 
   func setupFrames() {
-    let totalSize = UIScreen.mainScreen().bounds
+    let totalSize = UIScreen.main.bounds
 
     scrollView.frame = CGRect(x: 0, y: 0, width: totalSize.width, height: totalSize.height)
     titleLabel.frame.origin = CGPoint(x: (totalSize.width - titleLabel.frame.width) / 2, y: 60)
