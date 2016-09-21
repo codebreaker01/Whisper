@@ -2,45 +2,45 @@ import UIKit
 
 let whistleFactory = WhistleFactory()
 
-public func Whistle(murmur: Murmur) {
-  if UIApplication.sharedApplication().applicationState == .Active {
+public func Whistle(_ murmur: Murmur) {
+  if UIApplication.shared.applicationState == .active {
     whistleFactory.whistler(murmur)
   }
 }
 
-public func Silent(after: NSTimeInterval = 0) {
-  if UIApplication.sharedApplication().applicationState == .Active {
+public func Silent(_ after: TimeInterval = 0) {
+  if UIApplication.shared.applicationState == .active {
     whistleFactory.silentWhistle(after)
   }
 }
 
-public class WhistleFactory: UIViewController {
+open class WhistleFactory: UIViewController {
 
-  public lazy var whistleWindow: UIWindow = UIWindow()
+  open lazy var whistleWindow: UIWindow = UIWindow()
     
-  public lazy var titleLabelHeight = CGFloat(20.0)
+  open lazy var titleLabelHeight = CGFloat(20.0)
 
-  public lazy var titleLabel: UILabel = {
+  open lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.textAlignment = .Center
+    label.textAlignment = .center
 
     return label
   }()
 
-  public var duration: NSTimeInterval = 2
-  public var viewController: UIViewController?
-  public var hideTimer = NSTimer()
+  open var duration: TimeInterval = 2
+  open var viewController: UIViewController?
+  open var hideTimer = Timer()
 
   // MARK: - Initializers
 
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nil, bundle: nil)
 
     setupWindow()
     view.clipsToBounds = true
     view.addSubview(titleLabel)
 
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WhistleFactory.orientationDidChange), name: UIDeviceOrientationDidChangeNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(WhistleFactory.orientationDidChange), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
   }
 
   public required init?(coder aDecoder: NSCoder) {
@@ -48,12 +48,12 @@ public class WhistleFactory: UIViewController {
   }
 
   deinit {
-    NSNotificationCenter.defaultCenter().removeObserver(self, name: UIDeviceOrientationDidChangeNotification, object: nil)
+    NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
   }
 
   // MARK: - Configuration
 
-  public func whistler(murmur: Murmur) {
+  open func whistler(_ murmur: Murmur) {
     titleLabel.text = murmur.title
     titleLabel.font = murmur.font
     titleLabel.textColor = murmur.titleColor
@@ -65,14 +65,14 @@ public class WhistleFactory: UIViewController {
     present(duration: murmur.duration)
   }
   
-  func silentWhistle(after: NSTimeInterval) {
+  func silentWhistle(_ after: TimeInterval) {
     hideTimer.invalidate()
-    hideTimer = NSTimer.scheduledTimerWithTimeInterval(after, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
+    hideTimer = Timer.scheduledTimer(timeInterval: after, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
   }
 
   // MARK: - Setup
 
-  public func setupWindow() {
+  open func setupWindow() {
     whistleWindow.addSubview(self.view)
     whistleWindow.rootViewController = UIViewController()
     whistleWindow.clipsToBounds = true
@@ -80,20 +80,20 @@ public class WhistleFactory: UIViewController {
   }
   
   func moveWindowToFront() {
-    let currentStatusBarStyle = UIApplication.sharedApplication().statusBarStyle
+    let currentStatusBarStyle = UIApplication.shared.statusBarStyle
     whistleWindow.windowLevel = UIWindowLevelStatusBar
-    UIApplication.sharedApplication().setStatusBarStyle(currentStatusBarStyle, animated: false)
+    UIApplication.shared.setStatusBarStyle(currentStatusBarStyle, animated: false)
   }
 
-  public func setupFrames() {
-    let labelWidth = UIScreen.mainScreen().bounds.width
+  open func setupFrames() {
+    let labelWidth = UIScreen.main.bounds.width
     let defaultHeight = titleLabelHeight
     
     if let text = titleLabel.text {
       let neededDimensions =
-        NSString(string: text).boundingRectWithSize(
-          CGSize(width: labelWidth, height: CGFloat.infinity),
-          options: NSStringDrawingOptions.UsesLineFragmentOrigin,
+        NSString(string: text).boundingRect(
+          with: CGSize(width: labelWidth, height: CGFloat.infinity),
+          options: NSStringDrawingOptions.usesLineFragmentOrigin,
           attributes: [NSFontAttributeName: titleLabel.font],
           context: nil
         )
@@ -115,27 +115,27 @@ public class WhistleFactory: UIViewController {
 
   // MARK: - Movement methods
 
-  public func present(duration duration: NSTimeInterval) {
+  open func present(duration: TimeInterval) {
     hideTimer.invalidate()
 
     let initialOrigin = whistleWindow.frame.origin.y
     whistleWindow.frame.origin.y = initialOrigin - titleLabelHeight
     whistleWindow.makeKeyAndVisible()
-    UIView.animateWithDuration(0.2, animations: {
+    UIView.animate(withDuration: 0.2, animations: {
       self.whistleWindow.frame.origin.y = initialOrigin
     })
 
     if duration > 0.0 {
-        hideTimer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
+        hideTimer = Timer.scheduledTimer(timeInterval: duration, target: self, selector: #selector(WhistleFactory.timerDidFire), userInfo: nil, repeats: false)
     }
   }
 
-  public func hide() {
+  open func hide() {
     let finalOrigin = view.frame.origin.y - titleLabelHeight
-    UIView.animateWithDuration(0.2, animations: {
+    UIView.animate(withDuration: 0.2, animations: {
       self.whistleWindow.frame.origin.y = finalOrigin
       }, completion: { _ in
-        if let window = UIApplication.sharedApplication().windows.filter({ $0 != self.whistleWindow }).first {
+        if let window = UIApplication.shared.windows.filter({ $0 != self.whistleWindow }).first {
           window.makeKeyAndVisible()
           self.whistleWindow.windowLevel = UIWindowLevelNormal - 1
           window.rootViewController?.setNeedsStatusBarAppearanceUpdate()
@@ -145,12 +145,12 @@ public class WhistleFactory: UIViewController {
  
   // MARK: - Timer methods
 
-  public func timerDidFire() {
+  open func timerDidFire() {
     hide()
   }
 
   func orientationDidChange() {
-    if whistleWindow.keyWindow {
+    if whistleWindow.isKeyWindow {
       setupFrames()
       hide()
     }
